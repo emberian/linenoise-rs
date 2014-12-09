@@ -1,13 +1,19 @@
 [package]
 name = "linenoise-sys"
-version = "0.0.1"
+version = "1.0.0"
 authors = ["Corey Richardson <corey@octayn.net>"]
-links = "linenoise"
+license = "BSD-2-Clause"
+keywords = ["readline", "linenoise", "command", "line", "editing"]
+repository = "https://github.com/cmr/linenoise-rs"
+homepage = "https://github.com/cmr/linenoise-rs"
+description = "Bindings to linenoise for simple line-editing facilities."
+
 build = "build.rs"
+links = "linenoise"
 
 [lib]
 name = "linenoise-sys"
 path = "lib.rs"
 
-[build-dependencies.gcc]
-git = "https://github.com/alexcrichton/gcc-rs"
+[build-dependencies]
+gcc = "*"
