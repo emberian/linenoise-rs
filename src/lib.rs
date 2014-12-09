@@ -11,9 +11,11 @@ static LOCK: std::sync::StaticMutex = std::sync::MUTEX_INIT;
 
 /// Prompt for input with string `p`. Returns `None` when there was no input, `Some` otherwise.
 pub fn prompt(p: &str) -> Option<CString> {
+    use std::c_str::ToCStr;
+
     let _lock = LOCK.lock();
     unsafe {
-        let res = linenoise::linenoise(p.as_ptr() as *const _);
+        let res = p.with_c_str(|ptr| linenoise::linenoise(ptr));
         if res.is_null() {
             None
         } else {
