@@ -9,10 +9,15 @@ use std::c_str::CString;
 
 static LOCK: std::sync::StaticMutex = std::sync::MUTEX_INIT;
 
-/// Prompt for input with string `p`.
-pub fn prompt(p: &str) -> CString {
+/// Prompt for input with string `p`. Returns `None` when there was no input, `Some` otherwise.
+pub fn prompt(p: &str) -> Option<CString> {
     let _lock = LOCK.lock();
     unsafe {
-        CString::new(linenoise::linenoise(p.as_ptr() as *const _) as *const _, true)
+        let res = linenoise::linenoise(p.as_ptr() as *const _);
+        if res.is_null() {
+            None
+        } else {
+            Some(CString::new(res as *const _, true))
+        }
     }
 }
