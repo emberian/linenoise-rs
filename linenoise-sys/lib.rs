@@ -3,11 +3,12 @@ extern crate libc;
 use libc::{c_char, c_int, size_t};
 
 #[repr(C)]
+#[derive(Copy)]
+#[allow(raw_pointer_deriving)]
 pub struct Completions {
     pub len: size_t,
     pub cvec: *mut *mut c_char,
 }
-impl Copy for Completions {}
 
 pub type CompletionCallback = extern "C" fn(*const c_char,
                                             *mut Completions);

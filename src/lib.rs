@@ -7,6 +7,7 @@ extern crate "linenoise-sys" as linenoise;
 extern crate libc;
 
 use std::c_str;
+use std::c_str::ToCStr;
 
 /// Prompt for input with string `p`. Returns `None` when there was no input, `Some` otherwise.
 pub fn prompt(p: &str) -> Option<String> {
