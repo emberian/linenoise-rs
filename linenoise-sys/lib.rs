@@ -4,7 +4,7 @@ use libc::{c_char, c_int, size_t};
 
 #[repr(C)]
 #[derive(Copy)]
-#[allow(raw_pointer_deriving)]
+#[allow(raw_pointer_derive)]
 pub struct Completions {
     pub len: size_t,
     pub cvec: *mut *mut c_char,

@@ -8,6 +8,10 @@ extern crate libc;
 
 use std::ffi::CString;
 
+fn from_c_str<'a>(p: &'a *const libc::c_char) -> &'a str {
+    std::str::from_utf8( unsafe { std::ffi::c_str_to_bytes(p) } ).ok().expect("Found invalid utf8")
+}
+
 /// Prompt for input with string `p`. Returns `None` when there was no input, `Some` otherwise.
 pub fn prompt(p: &str) -> Option<String> {
     unsafe {
@@ -16,7 +20,8 @@ pub fn prompt(p: &str) -> Option<String> {
         if res.is_null() {
             None
         } else {
-            Some(std::str::from_c_str(res).to_string())
+            let cr = res as *const _;
+            Some(from_c_str(&cr).to_string())
         }
     }
 }
@@ -36,7 +41,8 @@ pub fn set_callback(rust_cb: CompletionCallback ) {
 fn internal_callback(cs: *mut libc::c_char, lc:*mut linenoise::Completions ) {
     unsafe {
         (*lc).len = 0;
-        let input = std::str::from_c_str(cs as *const _);
+        let cr = cs as *const _;
+        let input = from_c_str(&cr);
         for external_callback in USER_COMPLETION.iter() {
             let ret = (*external_callback)(input);
             for x in ret.iter() {
