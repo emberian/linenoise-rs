@@ -1,3 +1,5 @@
+#![allow(unstable)]
+
 //! Simple [linenoise](https://github.com/antirez/linenoise/) wrapper.
 //!
 //! Since linenoise is not thread safe, all of these functions internally acquire a global mutex
