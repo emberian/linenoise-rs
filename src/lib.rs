@@ -73,8 +73,8 @@ pub fn history_add(line: &str) -> i32 {
 }
 
 /// Set max length history
-pub fn history_set_max_len(len: i32) -> i32 {
-    let mut ret: i32;
+pub fn history_set_max_len(len: c_int) -> c_int {
+    let mut ret: c_int;
     unsafe {
         ret = linenoise::linenoiseHistorySetMaxLen(len);
     }
@@ -82,9 +82,9 @@ pub fn history_set_max_len(len: i32) -> i32 {
 }
 
 /// Save the history on disk
-pub fn history_save(file: &str) -> i32 {
+pub fn history_save(file: &str) -> c_int {
     let fname = CString::from_slice(file.as_bytes()).as_slice_with_nul().as_ptr();
-    let mut ret: i32;
+    let mut ret: c_int;
     unsafe {
         ret = linenoise::linenoiseHistorySave(fname);
     }
@@ -92,9 +92,9 @@ pub fn history_save(file: &str) -> i32 {
 }
 
 /// Load the history on disk
-pub fn history_load(file: &str) -> i32 {
+pub fn history_load(file: &str) -> c_int {
     let fname = CString::from_slice(file.as_bytes()).as_slice_with_nul().as_ptr();
-    let mut ret: i32;
+    let mut ret: c_int;
     unsafe {
         ret = linenoise::linenoiseHistoryLoad(fname);
     }
@@ -108,7 +108,7 @@ pub fn clear_screen() {
     }
 }
 
-pub fn set_multiline(ml: i32) {
+pub fn set_multiline(ml: c_int) {
     unsafe {
         linenoise::linenoiseSetMultiLine(ml);
     }
