@@ -1,5 +1,4 @@
 #![allow(unstable)]
-
 //! Simple [linenoise](https://github.com/antirez/linenoise/) wrapper.
 //!
 //! Since linenoise is not thread safe, all of these functions internally acquire a global mutex
@@ -8,6 +7,7 @@
 extern crate "linenoise-sys" as linenoise;
 extern crate libc;
 
+use libc::{c_char, c_int};
 use std::ffi::CString;
 
 fn from_c_str<'a>(p: &'a *const libc::c_char) -> &'a str {
@@ -17,8 +17,8 @@ fn from_c_str<'a>(p: &'a *const libc::c_char) -> &'a str {
 /// Prompt for input with string `p`. Returns `None` when there was no input, `Some` otherwise.
 pub fn prompt(p: &str) -> Option<String> {
     unsafe {
-        let ptr = CString::from_slice(p.as_bytes()).as_slice_with_nul().as_ptr();
-        let res = linenoise::linenoise(ptr);
+        let prompt = CString::from_slice(p.as_bytes());
+        let res = linenoise::linenoise(prompt.as_slice_with_nul().as_ptr());
         if res.is_null() {
             None
         } else {
@@ -28,7 +28,7 @@ pub fn prompt(p: &str) -> Option<String> {
     }
 }
 
-pub type CompletionCallback = fn(&str) -> Vec<&str>;
+pub type CompletionCallback = fn(&str) -> Vec<String>;
 static mut USER_COMPLETION: Option<CompletionCallback> = None;
 
 /// Sets the callback when tab is pressed
@@ -48,7 +48,7 @@ fn internal_callback(cs: *mut libc::c_char, lc:*mut linenoise::Completions ) {
         for external_callback in USER_COMPLETION.iter() {
             let ret = (*external_callback)(input);
             for x in ret.iter() {
-                add_completion(lc, *x);
+                add_completion(lc, x.as_slice());
             }
         }
     }
@@ -57,17 +57,18 @@ fn internal_callback(cs: *mut libc::c_char, lc:*mut linenoise::Completions ) {
 /// Add a completion to the current list of completions.
 pub fn add_completion(c: *mut linenoise::Completions, s: &str) {
     unsafe {
-        linenoise::linenoiseAddCompletion(c, CString::from_slice(s.as_bytes()).as_slice_with_nul().as_ptr());
+        let c_str = CString::from_slice(s.as_bytes());
+        linenoise::linenoiseAddCompletion(c, c_str.as_slice_with_nul().as_ptr());
     }
 }
 
 
 /// Add this string to the history
 pub fn history_add(line: &str) -> i32 {
-    let cs = CString::from_slice(line.as_bytes()).as_slice_with_nul().as_ptr();
+    let c_str = CString::from_slice(line.as_bytes());
     let mut ret: i32;
     unsafe {
-        ret = linenoise::linenoiseHistoryAdd(cs);
+        ret = linenoise::linenoiseHistoryAdd(c_str.as_slice_with_nul().as_ptr());
     }
     ret
 }
