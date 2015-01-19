@@ -13,7 +13,3 @@ description = "Bindings to linenoise for simple line-editing facilities."
 [dependencies.linenoise-sys]
 path = "linenoise-sys"
 version = "~1.0.1"
-
-[[bin]]
-
-name = "linenoise_example"
