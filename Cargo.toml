@@ -1,15 +1,15 @@
 [package]
 
 name = "linenoise"
-version = "0.0.3"
-authors = ["Corey Richardson <corey@octayn.net>"]
+version = "0.0.4"
+authors = ["Corey Richardson <corey@octayn.net>", "Pierre Baillet <pierre@baillet.name>"]
 license = "BSD-2-Clause"
 readme = "README.md"
-keywords = ["readline", "linenoise", "command", "line", "editing"]
+keywords = ["readline", "linenoise", "cli", "editing"]
 repository = "https://github.com/cmr/linenoise-rs"
 homepage = "https://github.com/cmr/linenoise-rs"
 description = "Bindings to linenoise for simple line-editing facilities."
 
 [dependencies.linenoise-sys]
 path = "linenoise-sys"
-version = "~1.0.0"
+version = "~1.0.1"
