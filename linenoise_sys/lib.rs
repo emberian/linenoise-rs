@@ -1,10 +1,9 @@
-#![allow(unstable)]
 extern crate libc;
 
 use libc::{c_char, c_int, size_t};
 
 #[repr(C)]
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 #[allow(raw_pointer_derive)]
 pub struct Completions {
     pub len: size_t,
